@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/startFragment">
+
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="com.duyvv.service.ui.StartFragment"
+        android:label="fragment_start"
+        tools:layout="@layout/fragment_start">
+        <action
+            android:id="@+id/action_startFragment_to_musicFragment"
+            app:destination="@id/musicFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/musicFragment"
+        android:name="com.duyvv.service.ui.music.MusicFragment"
+        android:label="MusicFragment" />
+</navigation>
