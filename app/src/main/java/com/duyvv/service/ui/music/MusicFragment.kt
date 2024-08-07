@@ -1,6 +1,8 @@
 package com.duyvv.service.ui.music
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.duyvv.service.MainActivity
 import com.duyvv.service.R
 import com.duyvv.service.base.BaseFragment
@@ -38,6 +41,8 @@ class MusicFragment : BaseFragment<FragmentMusicPlayerBinding>() {
     }
 
     private fun setup() {
+        checkPermission()
+
         activity.startMusicService()
 
         collectLifecycleFlow(activity.isBound) { isBound ->
@@ -46,6 +51,15 @@ class MusicFragment : BaseFragment<FragmentMusicPlayerBinding>() {
 
                 setupListener()
             }
+        }
+    }
+
+    private fun checkPermission() {
+        if (
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            !activity.hasPermission(Manifest.permission.POST_NOTIFICATIONS)
+        ) {
+            activity.requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 
@@ -102,7 +116,11 @@ class MusicFragment : BaseFragment<FragmentMusicPlayerBinding>() {
     private fun setupCollect() {
         collectLifecycleFlow(viewModel.songs) {
             musicService?.setSongs(it)
-            musicService?.startMusic()
+            if (musicService?.isPlaying?.value == true) {
+                musicService?.resumeMusic()
+            } else {
+                musicService?.startMusic()
+            }
         }
 
         collectLifecycleFlow(musicService!!.currentSongIndex) {
@@ -125,6 +143,13 @@ class MusicFragment : BaseFragment<FragmentMusicPlayerBinding>() {
 
         collectLifecycleFlow(musicService!!.currentVolume) { currentVolume ->
             updateVolumeSeekbar(currentVolume)
+        }
+
+        collectLifecycleFlow(musicService!!.isActive) { isActive ->
+            if (!isActive) {
+                activity.closeMusic()
+                findNavController().popBackStack()
+            }
         }
     }
 
