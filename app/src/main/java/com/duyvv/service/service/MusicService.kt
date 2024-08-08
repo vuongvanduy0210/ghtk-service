@@ -8,7 +8,6 @@ import android.os.IBinder
 import android.util.Log
 import com.duyvv.service.domain.MusicAction
 import com.duyvv.service.domain.Song
-import com.duyvv.service.utils.CHANNEL_ID
 import com.duyvv.service.utils.KEY_ACTION
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -99,12 +98,13 @@ class MusicService : Service(), MediaPlayer.OnCompletionListener {
 
     private fun sendNotification() {
         val notification = MusicNotificationManager(
-            this,
-            CHANNEL_ID,
-            songs,
-            currentSongIndex.value,
-            isPlaying.value
-        ).buildNotification()
+            this
+        ).buildNotification(
+            songs[currentSongIndex.value],
+            isPlaying.value,
+            currentProcess.value,
+            duration.value
+        )
         startForeground(1, notification)
     }
 
@@ -161,17 +161,27 @@ class MusicService : Service(), MediaPlayer.OnCompletionListener {
         }
 
         timer = Timer()
-        timer?.schedule(object : TimerTask() {
-            override fun run() {
-                try {
-                    mediaPlayer?.let {
-                        _currentProcess.value = it.currentPosition
+        timer?.schedule(
+            object : TimerTask() {
+                override fun run() {
+                    try {
+                        mediaPlayer?.let {
+                            _currentProcess.value = it.currentPosition
+                        }
+                    } catch (e: IllegalStateException) {
+                        Log.d("TAG", "${e.message}")
                     }
-                } catch (e: IllegalStateException) {
-                    Log.d("TAG", "${e.message}")
                 }
-            }
-        }, 0, 200)
+            }, 0, 200
+        )
+
+        timer?.schedule(
+            object : TimerTask() {
+                override fun run() {
+                    sendNotification()
+                }
+            }, 0, 500
+        )
     }
 
     fun updateCurrentProcess(currentProcess: Int) {

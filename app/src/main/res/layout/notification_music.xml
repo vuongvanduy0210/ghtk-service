@@ -1,101 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:baselineAligned="false"
-    android:gravity="center"
-    android:padding="10dp"
     android:background="@color/background_color">
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/layoutTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginStart="10dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tvNotificationSongName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:lines="1"
-            android:textColor="@color/black"
-            android:text="@string/song"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvNotificationSinger"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:ellipsize="end"
-            android:textColor="@color/black"
-            android:lines="1"
-            android:text="@string/singer"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@id/btnCancel"
+        android:baselineAligned="false"
+        android:padding="10dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/linearLayout"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/btnNotificationVolumeDown"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:src="@drawable/ic_volume_down" />
+            <TextView
+                android:id="@+id/tvNotificationSongName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="@string/song"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/btnNotificationVolumeUp"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:layout_marginStart="30dp"
-                android:src="@drawable/ic_volume_up" />
-
+            <TextView
+                android:id="@+id/tvNotificationSinger"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="@string/singer"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center">
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/btnNotificationPrevious"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:src="@drawable/ic_previous" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/btnNotificationPlayPause"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_pause" />
+                <ImageView
+                    android:id="@+id/btnNotificationVolumeDown"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:src="@drawable/ic_volume_down" />
 
-            <ImageView
-                android:id="@+id/btnNotificationNext"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:src="@drawable/ic_next" />
+                <ImageView
+                    android:id="@+id/btnNotificationVolumeUp"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_marginStart="30dp"
+                    android:src="@drawable/ic_volume_up" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/btnNotificationPrevious"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_previous" />
+
+                <ImageView
+                    android:id="@+id/btnNotificationPlayPause"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_pause" />
+
+                <ImageView
+                    android:id="@+id/btnNotificationNext"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:src="@drawable/ic_next" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/btnCancel"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="@drawable/ic_cancel"
-        android:layout_marginStart="20dp" />
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/ic_cancel" />
 
-</LinearLayout>
+    <RelativeLayout
+        android:id="@+id/layout_seekbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layoutTitle"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/btnCancel"
+        android:padding="10dp">
+
+        <ProgressBar
+            android:id="@+id/progressBarMusic"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progressTint="@color/seekbar_color"
+            android:scaleY="1.5"
+            android:thumbTint="@color/seekbar_color" />
+
+        <TextView
+            android:id="@+id/tvCurrentTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/progressBarMusic"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:text="00:00" />
+
+        <TextView
+            android:id="@+id/tvFinalTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/progressBarMusic"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:ignore="RelativeOverlap"
+            tools:text="05:00" />
+    </RelativeLayout>
+
+</RelativeLayout>

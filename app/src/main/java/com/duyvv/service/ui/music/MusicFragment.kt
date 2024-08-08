@@ -1,7 +1,6 @@
 package com.duyvv.service.ui.music
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,6 +16,7 @@ import com.duyvv.service.R
 import com.duyvv.service.base.BaseFragment
 import com.duyvv.service.databinding.FragmentMusicPlayerBinding
 import com.duyvv.service.domain.Song
+import com.duyvv.service.utils.toMinuteSecond
 
 class MusicFragment : BaseFragment<FragmentMusicPlayerBinding>() {
 
@@ -119,7 +119,7 @@ class MusicFragment : BaseFragment<FragmentMusicPlayerBinding>() {
     private fun setupCollect() {
         collectLifecycleFlow(viewModel.songs) {
             musicService?.setSongs(it)
-            if (musicService?.isPlaying?.value == true) {
+            if (musicService?.mediaPlayer != null) {
                 musicService?.resumeMusic()
             } else {
                 musicService?.startMusic()
@@ -161,23 +161,14 @@ class MusicFragment : BaseFragment<FragmentMusicPlayerBinding>() {
         binding.seekBarVolume.progress = (currentVolume * 100).toInt()
     }
 
-    @SuppressLint("DefaultLocale")
     private fun updateCurrentTime(currentTime: Int) {
         binding.seekBarMusic.progress = currentTime
-        val minutes: Int = currentTime / 1000 / 60
-        val seconds: Int = currentTime / 1000 % 60
-        val str = String.format("%02d:%02d", minutes, seconds)
-        binding.tvCurrentTime.text = str
+        binding.tvCurrentTime.text = currentTime.toMinuteSecond()
     }
 
-    @SuppressLint("DefaultLocale")
     private fun updateDuration(duration: Int) {
         binding.seekBarMusic.max = duration
-        val minutes: Int = duration / 1000 / 60
-        val seconds: Int = duration / 1000 % 60
-
-        val str = String.format("%02d:%02d", minutes, seconds)
-        binding.tvFinalTime.text = str
+        binding.tvFinalTime.text = duration.toMinuteSecond()
     }
 
     private fun updateUI(currentSong: Song) {
