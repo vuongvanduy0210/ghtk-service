@@ -1,13 +1,17 @@
 package com.duyvv.service.ui.music
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.duyvv.service.MainActivity
 import com.duyvv.service.R
 import com.duyvv.service.base.BaseFragment
@@ -31,6 +35,8 @@ class MusicFragment : BaseFragment<FragmentMusicPlayerBinding>() {
 
     private val musicService by lazy { activity.musicService }
 
+    private lateinit var runnable: Runnable
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -38,6 +44,8 @@ class MusicFragment : BaseFragment<FragmentMusicPlayerBinding>() {
     }
 
     private fun setup() {
+        checkPermission()
+
         activity.startMusicService()
 
         collectLifecycleFlow(activity.isBound) { isBound ->
@@ -46,6 +54,15 @@ class MusicFragment : BaseFragment<FragmentMusicPlayerBinding>() {
 
                 setupListener()
             }
+        }
+    }
+
+    private fun checkPermission() {
+        if (
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            !activity.hasPermission(Manifest.permission.POST_NOTIFICATIONS)
+        ) {
+            activity.requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 
@@ -102,7 +119,11 @@ class MusicFragment : BaseFragment<FragmentMusicPlayerBinding>() {
     private fun setupCollect() {
         collectLifecycleFlow(viewModel.songs) {
             musicService?.setSongs(it)
-            musicService?.startMusic()
+            if (musicService?.isPlaying?.value == true) {
+                musicService?.resumeMusic()
+            } else {
+                musicService?.startMusic()
+            }
         }
 
         collectLifecycleFlow(musicService!!.currentSongIndex) {
@@ -113,6 +134,7 @@ class MusicFragment : BaseFragment<FragmentMusicPlayerBinding>() {
             binding.imgPlay.setImageResource(
                 if (it) R.drawable.ic_pause else R.drawable.ic_play
             )
+            if (it) startRotateSongImage() else stopRotateSongImage()
         }
 
         collectLifecycleFlow(musicService!!.currentProcess) { currentTime ->
@@ -125,6 +147,13 @@ class MusicFragment : BaseFragment<FragmentMusicPlayerBinding>() {
 
         collectLifecycleFlow(musicService!!.currentVolume) { currentVolume ->
             updateVolumeSeekbar(currentVolume)
+        }
+
+        collectLifecycleFlow(musicService!!.isActive) { isActive ->
+            if (!isActive) {
+                activity.closeMusic()
+                findNavController().popBackStack()
+            }
         }
     }
 
@@ -155,6 +184,22 @@ class MusicFragment : BaseFragment<FragmentMusicPlayerBinding>() {
         binding.apply {
             tvSongName.text = currentSong.name
             tvSinger.text = currentSong.singer
+            imgSong.setImageResource(R.drawable.music_icon)
         }
+    }
+
+    private fun startRotateSongImage() {
+        runnable = Runnable {
+            binding.imgSong
+                .animate().rotationBy(360f)
+                .withEndAction(runnable).setDuration(10000)
+                .setInterpolator(LinearInterpolator())
+                .start()
+        }
+        runnable.run()
+    }
+
+    private fun stopRotateSongImage() {
+        binding.imgSong.animate().cancel()
     }
 }

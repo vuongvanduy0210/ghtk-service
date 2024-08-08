@@ -6,7 +6,10 @@ import android.media.MediaPlayer
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
+import com.duyvv.service.domain.MusicAction
 import com.duyvv.service.domain.Song
+import com.duyvv.service.utils.CHANNEL_ID
+import com.duyvv.service.utils.KEY_ACTION
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.util.Timer
@@ -39,6 +42,9 @@ class MusicService : Service(), MediaPlayer.OnCompletionListener {
     private val _currentVolume = MutableStateFlow(1f)
     val currentVolume = _currentVolume.asStateFlow()
 
+    private val _isActive = MutableStateFlow(true)
+    val isActive = _isActive.asStateFlow()
+
     private var timer: Timer? = null
 
     fun setSongs(list: List<Song>) {
@@ -46,12 +52,60 @@ class MusicService : Service(), MediaPlayer.OnCompletionListener {
         songs.addAll(list)
     }
 
+    override fun onCreate() {
+        super.onCreate()
+        Log.d("MusicService", "onCreate")
+        _isActive.value = true
+    }
+
     override fun onBind(intent: Intent): IBinder {
+        Log.d("MusicService", "onBind")
         return binder
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.d("MusicService", "onStartCommand")
+        intent?.getIntExtra(KEY_ACTION, 0)?.let { actionValue ->
+            if (actionValue != 0) {
+                handleMusicAction(actionValue)
+            }
+        }
         return START_STICKY
+    }
+
+    private fun handleMusicAction(actionValue: Int) {
+        when (actionValue) {
+            MusicAction.RESUME -> resumeMusic()
+
+            MusicAction.PAUSE -> pauseMusic()
+
+            MusicAction.PREVIOUS -> previousSong()
+
+            MusicAction.NEXT -> nextSong()
+
+            MusicAction.VOLUME_DOWN -> decreaseVolume()
+
+            MusicAction.VOLUME_UP -> increaseVolume()
+
+            MusicAction.CANCEL -> stopMusic()
+        }
+    }
+
+    private fun stopMusic() {
+        _isActive.value = false
+        _isPlaying.value = false
+        stopSelf()
+    }
+
+    private fun sendNotification() {
+        val notification = MusicNotificationManager(
+            this,
+            CHANNEL_ID,
+            songs,
+            currentSongIndex.value,
+            isPlaying.value
+        ).buildNotification()
+        startForeground(1, notification)
     }
 
     fun startMusic() {
@@ -65,10 +119,11 @@ class MusicService : Service(), MediaPlayer.OnCompletionListener {
             setOnCompletionListener(this@MusicService)
             start()
             _duration.value = duration
-            sendCurrentProcess()
-            _isPlaying.value = true
             setVolume(currentVolume.value, currentVolume.value)
         }
+        sendCurrentProcess()
+        _isPlaying.value = true
+        sendNotification()
     }
 
     fun pauseMusic() {
@@ -77,6 +132,7 @@ class MusicService : Service(), MediaPlayer.OnCompletionListener {
             _isPlaying.value = false
             timer?.cancel()
         }
+        sendNotification()
     }
 
     fun resumeMusic() {
@@ -85,6 +141,7 @@ class MusicService : Service(), MediaPlayer.OnCompletionListener {
             _isPlaying.value = true
             sendCurrentProcess()
         }
+        sendNotification()
     }
 
     fun previousSong() {
@@ -114,7 +171,7 @@ class MusicService : Service(), MediaPlayer.OnCompletionListener {
                     Log.d("TAG", "${e.message}")
                 }
             }
-        }, 0, 1000)
+        }, 0, 200)
     }
 
     fun updateCurrentProcess(currentProcess: Int) {

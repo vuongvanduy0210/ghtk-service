@@ -7,11 +7,16 @@
     android:gravity="center"
     android:orientation="vertical">
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imgSong"
+        android:layout_width="200dp"
+        android:layout_height="200dp" />
+
     <LinearLayout
-        android:id="@+id/song_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="20dp"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -63,7 +68,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_current_time"
+            android:id="@+id/tvCurrentTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
@@ -73,13 +78,13 @@
             tools:text="00:00" />
 
         <TextView
-            android:id="@+id/tv_final_time"
+            android:id="@+id/tvFinalTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_current_time"
+            app:layout_constraintTop_toTopOf="@+id/tvCurrentTime"
             tools:ignore="RelativeOverlap"
             tools:text="05:00" />
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -126,33 +131,34 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="30dp">
 
         <ImageView
             android:id="@+id/btnVolumeDown"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/volume_down_24px"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/ic_volume_down"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/btnVolumeUp"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:layout_marginStart="20dp"
             android:layout_marginBottom="20dp"
-            android:src="@drawable/volume_up_24px"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/ic_volume_up"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toTopOf="parent" />
 
         <SeekBar
             android:id="@+id/seekBarVolume"
-            android:layout_width="300dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:max="100"
+
             android:progressTint="@color/teal_200"
             android:thumbTint="@color/teal_200"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -165,7 +171,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
+            app:layout_constraintGuide_begin="206dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
