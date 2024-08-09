@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/background_color">
@@ -113,47 +112,5 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="20dp"
         android:src="@drawable/ic_cancel" />
-
-    <RelativeLayout
-        android:id="@+id/layout_seekbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/layoutTitle"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/btnCancel"
-        android:padding="10dp">
-
-        <ProgressBar
-            android:id="@+id/progressBarMusic"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:progressTint="@color/seekbar_color"
-            android:scaleY="1.5"
-            android:thumbTint="@color/seekbar_color" />
-
-        <TextView
-            android:id="@+id/tvCurrentTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/progressBarMusic"
-            android:layout_alignParentStart="true"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            tools:text="00:00" />
-
-        <TextView
-            android:id="@+id/tvFinalTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/progressBarMusic"
-            android:layout_alignParentEnd="true"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            tools:ignore="RelativeOverlap"
-            tools:text="05:00" />
-    </RelativeLayout>
 
 </RelativeLayout>

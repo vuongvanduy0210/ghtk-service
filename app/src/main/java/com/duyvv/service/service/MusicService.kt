@@ -90,20 +90,12 @@ class MusicService : Service(), MediaPlayer.OnCompletionListener {
         }
     }
 
-    private fun stopMusic() {
-        _isActive.value = false
-        _isPlaying.value = false
-        stopSelf()
-    }
-
     private fun sendNotification() {
         val notification = MusicNotificationManager(
             this
         ).buildNotification(
             songs[currentSongIndex.value],
-            isPlaying.value,
-            currentProcess.value,
-            duration.value
+            isPlaying.value
         )
         startForeground(1, notification)
     }
@@ -154,6 +146,12 @@ class MusicService : Service(), MediaPlayer.OnCompletionListener {
         startMusic()
     }
 
+    private fun stopMusic() {
+        _isActive.value = false
+        _isPlaying.value = false
+        stopSelf()
+    }
+
     private fun sendCurrentProcess() {
         if (timer != null) {
             timer?.cancel()
@@ -173,14 +171,6 @@ class MusicService : Service(), MediaPlayer.OnCompletionListener {
                     }
                 }
             }, 0, 200
-        )
-
-        timer?.schedule(
-            object : TimerTask() {
-                override fun run() {
-                    sendNotification()
-                }
-            }, 0, 500
         )
     }
 

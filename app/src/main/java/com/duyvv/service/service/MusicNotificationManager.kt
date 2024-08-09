@@ -14,7 +14,6 @@ import com.duyvv.service.domain.Song
 import com.duyvv.service.receiver.MusicReceiver
 import com.duyvv.service.utils.ACTION_MUSIC
 import com.duyvv.service.utils.CHANNEL_ID
-import com.duyvv.service.utils.toMinuteSecond
 
 class MusicNotificationManager(
     private val context: Context
@@ -44,18 +43,13 @@ class MusicNotificationManager(
 
     fun buildNotification(
         currentSong: Song,
-        isPlaying: Boolean,
-        currentProcess: Int,
-        duration: Int
+        isPlaying: Boolean
     ): Notification {
         val notificationLayout = RemoteViews(context.packageName, R.layout.notification_music)
         val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
         notificationLayout.apply {
             setTextViewText(R.id.tvNotificationSongName, currentSong.name)
             setTextViewText(R.id.tvNotificationSinger, currentSong.singer)
-            setTextViewText(R.id.tvCurrentTime, currentProcess.toMinuteSecond())
-            setTextViewText(R.id.tvFinalTime, duration.toMinuteSecond())
-            setProgressBar(R.id.progressBarMusic, duration, currentProcess, false)
 
             setImageViewResource(
                 R.id.btnNotificationPlayPause,
